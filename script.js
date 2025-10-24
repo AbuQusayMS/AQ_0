@@ -4,8 +4,8 @@ const ICON_MOON = '\uD83C\uDF19';
 class QuizGame {
     constructor() {
         this.config = {
-            SUPABASE_URL: 'https://mngepvlvxvurrocnrsqa.supabase.co', // ضع رابط خادم Supabase الرئيسي هنا
-            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1uZ2Vwdmx2eHZ1cnJvY25yc3FhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEzMjAyNjgsImV4cCI6MjA3Njg5NjI2OH0.UfBY_KMhqscfsLmHWG4PjvibDFaB-X_Lkyv0R2XO-h4', // ضع مفتاح الخادم الرئيسي هنا
+            SUPABASE_URL: 'https://sngetxkrlizksgjiovbs.supabase.co', // ضع رابط خادم Supabase الرئيسي هنا
+            SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuZ2V0eGtybGl6a3NnamlvdmJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyOTYyNzEsImV4cCI6MjA3Njg3MjI3MX0.XIFw-huu8_uLtY16ILpXCU6us4jyqEpfagVRqj1l-EI', // ضع مفتاح الخادم الرئيسي هنا
             EDGE_SAVE_URL: '###', // ضع رابط دالة حفظ النتائج هنا
             EDGE_LOG_URL: '###', // ضع رابط دالة السجلات هنا
             EDGE_REPORT_URL: '###', // ضع رابط دالة البلاغات هنا
