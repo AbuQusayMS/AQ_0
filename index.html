@@ -1,0 +1,645 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="مسابقة معلومات تفاعلية لاختبار ثقافتك في مستويات متعددة.">
+  <title>🧠 مسابقة المعلومات | Hybrid Edition</title>
+
+  <link rel="icon" type="image/png" href="https://em-content.zobj.net/thumbs/120/apple/354/brain_1f9e0.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "🧠 مسابقة المعلومات",
+    "description": "لعبة مسابقة تفاعلية لاختبار المعلومات في مستويات متعددة",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web Browser",
+    "author": { "@type": "Person", "name": "MS AbuQusay" }
+  }
+  </script>
+</head>
+<body data-theme="dark">
+  <noscript>هذه اللعبة تتطلب تفعيل JavaScript.</noscript>
+
+  <!-- نظام الإشعارات -->
+  <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+
+  <!-- زر الإبلاغ العائم -->
+  <button id="reportErrorFab" class="report-fab" aria-label="الإبلاغ عن مشكلة" data-action="showAdvancedReportModal">
+    <span class="fab-icon">⚠️</span>
+    <span class="fab-pulse"></span>
+  </button>
+
+  <!-- شاشة التحميل -->
+  <div id="loader" class="screen active" role="status" aria-label="جاري التحميل">
+    <div class="loader-content">
+      <div class="brain-loader">
+        <div class="brain-animation">🧠</div>
+        <div class="loader-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <p id="loaderText" class="game-subtitle">جاري تحميل اللعبة...</p>
+    </div>
+  </div>
+
+  <!-- الشاشة الرئيسية -->
+  <div id="startScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header">
+        <div class="title-animation">
+          <h1 class="game-title">🧠 مسابقة المعلومات</h1>
+          <div class="sparkle">✨</div>
+        </div>
+        <p class="game-subtitle">اختبر قدراتك في مسابقة تفاعلية شيقة</p>
+      </header>
+      <div class="button-group">
+        <button id="startBtn" class="btn-main pulse-animation" data-action="showAvatarScreen">
+          <span class="btn-content">ابدأ اللعب</span>
+          <span class="btn-sparkle">🎮</span>
+        </button>
+        <button class="btn-secondary glow-on-hover" data-action="showLeaderboard">
+          <span class="btn-content">لوحة الصدارة</span>
+          <span class="btn-icon">🏆</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة اختيار الصورة الرمزية -->
+  <div id="avatarScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2>👤 اختر صورتك الرمزية</h2>
+      </header>
+      <div class="avatar-grid" role="group" aria-label="خيارات الصور الرمزية"></div>
+      <div class="button-group">
+        <button id="confirmAvatarBtn" class="btn-main" disabled data-action="showNameEntryScreen">
+          <span class="btn-content">التالي</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة إدخال الاسم -->
+  <div id="nameEntryScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2>✍️ أدخل اسمك</h2>
+      </header>
+      <div class="form-group">
+        <label for="nameInput" class="sr-only">اسم اللاعب</label>
+        <div class="input-container">
+          <input type="text" id="nameInput" placeholder="مثلا: عبد الله" maxlength="25" autocomplete="name" 
+                 aria-required="true" aria-describedby="nameError" class="input-field">
+          <span class="input-icon">👤</span>
+        </div>
+        <div id="nameError" class="error-message" aria-live="polite"></div>
+      </div>
+      <div class="button-group">
+        <button id="confirmNameBtn" class="btn-main" disabled data-action="confirmName">
+          <span class="btn-content">تأكيد الإسم</span>
+          <span class="btn-check">✓</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة التعليمات -->
+  <div id="instructionsScreen" class="screen screen--align-top">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2>📋 إرشادات اللعب</h2>
+      </header>
+      <div class="instructions-content">
+
+        <div class="instruction-item fade-in">
+          <span class="instruction-icon">⚖️</span>
+          <div>
+            <strong>النقاط:</strong>
+            <ul>
+              <li>الصحيحة: <span class="positive">+100</span></li>
+              <li>الخاطئة: <span class="negative">-100</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="instruction-item fade-in" style="animation-delay: 0.1s">
+          <span class="instruction-icon">🛠️</span>
+          <div>
+            <strong>المساعدات:</strong>
+            <ul>
+              <li>التخطي <span class="free">مجانية تماما</span></li>
+              <li>الأخرى تتجدد مع أول ثلاثة مستويات</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="instruction-item fade-in" style="animation-delay: 0.2s">
+          <span class="instruction-icon">🎯</span>
+          <div class="inline-list">
+            <strong>المستويات:</strong><br>
+            <span class="level-tag easy">سهل</span>
+            <span class="level-tag medium">متوسط</span>
+            <span class="level-tag hard">صعب</span>
+            <span class="level-tag impossible">مستحيل</span>
+          </div>
+        </div>
+
+        <div class="instruction-item fade-in" style="animation-delay: 0.3s">
+          <span class="instruction-icon">📩</span>
+          <div>
+            <strong>الدعم:</strong>
+            <ul>
+              <li>تواصل عبر <a href="###" target="_blank" rel="noopener noreferrer" class="social-link">إكس</a></li>
+              <li>أو عبر <a href="###" target="_blank" rel="noopener noreferrer" class="social-link">انستغرام</a></li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="button-group">
+        <button class="btn-main pulse-animation" data-action="postInstructionsStart">
+          <span class="btn-content">حسناً، لنبدأ</span>
+          <span class="btn-sparkle">🚀</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- الشاشة الرئيسية للعبة -->
+  <main id="gameContainer" class="screen">
+    <!-- الشريط العلوي -->
+    <div class="top-bar">
+      <button class="end-quiz-btn slide-in-left" aria-label="إنهاء المسابقة" data-action="showConfirmExitModal">
+        🚪 إنهاء
+      </button>
+      <div class="level-progress">
+        <div class="level-indicator" data-level="easy" data-tooltip="المستوى السهل">
+          <span>1</span>
+          <div class="level-pulse"></div>
+        </div>
+        <div class="level-indicator" data-level="medium" data-tooltip="المستوى المتوسط">
+          <span>2</span>
+          <div class="level-pulse"></div>
+        </div>
+        <div class="level-indicator" data-level="hard" data-tooltip="المستوى الصعب">
+          <span>3</span>
+          <div class="level-pulse"></div>
+        </div>
+        <div class="level-indicator" data-level="impossible" data-tooltip="المستوى المستحيل">
+          <span>4</span>
+          <div class="level-pulse"></div>
+        </div>
+      </div>
+      <button class="theme-toggle-btn glow-on-hover" aria-label="تبديل وضع السطوع والظلام" data-action="toggleTheme">
+        <span class="theme-icon">☀️</span>
+      </button>
+    </div>
+
+    <!-- رأس اللعبة -->
+    <header class="game-header">
+      <div class="player-info">
+        <div class="player-main">
+          <div class="avatar-container">
+            <img id="playerAvatar" src="" alt="الصورة الرمزية للاعب" loading="lazy" decoding="async" class="player-avatar">
+            <div class="avatar-glow"></div>
+          </div>
+          <div class="player-details">
+            <span id="playerName" class="player-name" aria-label="اسم اللاعب"></span>
+            <span id="playerId" class="player-id"></span>
+          </div>
+        </div>
+        <div class="player-stats">
+          <div class="stat-item">
+            <span class="stat-label">النقاط:</span>
+            <strong id="currentScore" class="score-value" aria-live="polite">100</strong>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">الأخطاء:</span>
+            <strong id="wrongAnswersCount" class="error-value" aria-live="assertive">0 / 3</strong>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">التخطي:</span>
+            <strong id="skipCount" class="skip-value">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- أدوات المساعدة -->
+      <div class="helpers" aria-label="خيارات المساعدة">
+        <button class="helper-btn glow-on-hover" data-type="fiftyFifty" aria-describedby="fiftyFiftyDesc">
+          <span class="helper-icon">50:50</span>
+          <span class="helper-cost">(100)</span>
+          <div class="helper-glow"></div>
+        </button>
+        
+        <button class="helper-btn glow-on-hover" data-type="freezeTime" aria-describedby="freezeTimeDesc">
+          <span class="helper-icon">❄️ 10ث</span>
+          <span class="helper-cost">(100)</span>
+          <div class="helper-glow"></div>
+        </button>
+        
+        <button class="helper-btn glow-on-hover" data-type="skipQuestion" aria-describedby="skipQuestionDesc">
+          <span class="helper-icon">⏭️ تخطي</span>
+          <span id="skipCost" class="helper-cost free">(مجانية)</span>
+          <div class="helper-glow"></div>
+        </button>
+
+        <span id="fiftyFiftyDesc" class="sr-only">يزيل خيارين خاطئين. الاستخدام مرة واحدة لكل جولة. التكلفة 100 نقطة.</span>
+        <span id="freezeTimeDesc" class="sr-only">يوقف المؤقت 10 ثوانٍ. الاستخدام مرة واحدة لكل جولة. التكلفة 100 نقطة.</span>
+        <span id="skipQuestionDesc" class="sr-only">تخطي السؤال الحالي. مجانية تماماً.</span>
+      </div>
+    </header>
+
+    <!-- المؤقت -->
+    <div class="timer-container" aria-label="مؤقت السؤال">
+      <div class="timer-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100">
+        <div class="timer-progress"></div>
+      </div>
+      <span id="timer" class="timer-text">80</span>
+      <div class="timer-glow"></div>
+    </div>
+
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+      <section class="question-box" aria-labelledby="questionCounter">
+        <div class="level-badge" id="currentLevelBadge">سهل</div>
+        <h3 id="questionCounter">السؤال 1 من 5</h3>
+        <p id="questionText" aria-live="polite"></p>
+      </section>
+      
+      <section class="options-container" aria-labelledby="questionText">
+        <div class="options-grid" role="group" aria-label="خيارات الإجابة"></div>
+      </section>
+    </div>
+  </main>
+
+  <!-- شاشة انتهاء المستوى -->
+  <div id="levelCompleteScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2 id="levelCompleteTitle" class="celebration-text">🎉 أكملت المستوى!</h2>
+        <div class="confetti"></div>
+      </header>
+      <div class="level-stats">
+        <div class="stat-card">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-value" id="levelScore">0</span>
+          <span class="stat-label">النقاط الحالية</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">❌</span>
+          <span class="stat-value" id="levelErrors">0</span>
+          <span class="stat-label">عدد الأخطاء</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-icon">✅</span>
+          <span class="stat-value" id="levelCorrect">0</span>
+          <span class="stat-label">الإجابات الصحيحة</span>
+        </div>
+      </div>
+      <div class="button-group">
+        <button class="btn-main pulse-animation" data-action="nextLevel">
+          <span class="btn-content">المستوى التالي</span>
+          <span class="btn-arrow">→</span>
+        </button>
+        <button class="btn-secondary" data-action="endGame">
+          <span class="btn-content">الانسحاب وعرض النتائج</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة النتائج النهائية -->
+  <div id="endScreen" class="screen screen--align-top">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2 class="celebration-text">🏆 النتائج النهائية 🏆</h2>
+        <div class="trophy-animation">🏆</div>
+      </header>
+      
+      <div class="final-stats">
+        <div class="stats-grid">
+          <div class="final-stat">
+            <span class="final-icon">✍️</span>
+            <span class="final-label">الاسم:</span>
+            <strong id="finalName" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">🆔</span>
+            <span class="final-label">المعرّف:</span>
+            <strong id="finalId" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">🔢</span>
+            <span class="final-label">رقم المحاولة:</span>
+            <strong id="finalAttemptNumber" class="final-value"></strong>
+          </div>
+          <div class="final-stat positive">
+            <span class="final-icon">✅</span>
+            <span class="final-label">الإجابات الصحيحة:</span>
+            <strong id="finalCorrect" class="final-value"></strong>
+          </div>
+          <div class="final-stat negative">
+            <span class="final-icon">❌</span>
+            <span class="final-label">الإجابات الخاطئة:</span>
+            <strong id="finalWrong" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">⏭️</span>
+            <span class="final-label">مرات التخطي:</span>
+            <strong id="finalSkips" class="final-value"></strong>
+          </div>
+          <div class="final-stat highlight">
+            <span class="final-icon">⭐</span>
+            <span class="final-label">النقاط النهائية:</span>
+            <strong id="finalScore" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">⏱️</span>
+            <span class="final-label">الوقت المستغرق:</span>
+            <strong id="totalTime" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">📈</span>
+            <span class="final-label">المستوى:</span>
+            <strong id="finalLevel" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">🎯</span>
+            <span class="final-label">نسبة الدقة:</span>
+            <strong id="finalAccuracy" class="final-value"></strong>
+          </div>
+          <div class="final-stat">
+            <span class="final-icon">⏳</span>
+            <span class="final-label">متوسط وقت الإجابة:</span>
+            <strong id="finalAvgTime" class="final-value"></strong>
+          </div>
+        </div>
+        
+        <div class="performance-rating">
+          <span class="performance-label">أداؤك:</span>
+          <strong id="performanceText" class="performance-value"></strong>
+        </div>
+      </div>
+
+      <!-- قسم المشاركة -->
+      <section class="share-section">
+        <h3>📢 مشاركة النتائج</h3>
+        <div class="share-buttons">
+          <button class="share-btn x pulse-animation" data-action="shareOnX">
+            <span class="share-icon">𝕏</span>
+            <span class="share-text">X</span>
+          </button>
+          <button class="share-btn instagram pulse-animation" data-action="shareOnInstagram">
+            <span class="share-icon">📷</span>
+            <span class="share-text">Instagram</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- عدّاد الانتظار -->
+      <div id="retryHint" class="retry-hint">
+        <div class="cooldown-timer">
+          <span class="cooldown-icon">⏳</span>
+          <span>يمكنك المحاولة مجددًا بعد</span>
+          <b id="retryCountdown" class="cooldown-value">30</b>
+          <span>ثانية</span>
+        </div>
+      </div>
+      
+      <!-- أزرار الإجراءات -->
+      <div class="button-group">
+        <button id="playAgainBtn" class="btn-main pulse-animation" data-action="playAgain">
+          <span class="btn-content">أعد اللعب</span>
+          <span class="btn-sparkle">🔄</span>
+        </button>
+        <button class="btn-secondary glow-on-hover" data-action="showLeaderboard">
+          <span class="btn-content">لوحة الصدارة</span>
+          <span class="btn-icon">🏆</span>
+        </button>
+        <button class="btn-secondary" data-action="showStartScreen">
+          <span class="btn-content">العودة للرئيسية</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- شاشة لوحة الصدارة -->
+  <div id="leaderboardScreen" class="screen screen--align-top">
+    <div class="content-box">
+      <header class="screen-header">
+        <h2>🏆 لوحة الصدارة 🏆</h2>
+      </header>
+     
+      <!-- فلاتر التصنيف -->
+      <div class="lb-filters">
+        <div class="filter-group">
+          <label for="lbMode" class="filter-label">نمط الترتيب:</label>
+          <select id="lbMode" class="filter-select" aria-label="نمط ترتيب اللوحة">
+            <option value="all">الكل</option>
+            <option value="best" selected>أفضل نتيجة</option>
+            <option value="attempt">رقم المحاولة</option>
+            <option value="accuracy">أعلى دقة</option>
+            <option value="time">أقل وقت</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label for="lbAttempt" class="filter-label">المحاولة:</label>
+          <select id="lbAttempt" class="filter-select" disabled aria-label="اختر رقم المحاولة">
+            <!-- سيتم تعبئته ديناميكياً -->
+          </select>
+        </div>
+      </div>
+     
+      <!-- محتوى لوحة الصدارة -->
+      <div id="leaderboardContent" class="leaderboard-content" aria-live="polite">
+        <!-- سيتم تعبئته ديناميكياً -->
+      </div>
+      
+      <div class="button-group">
+        <button class="btn-secondary" data-action="showStartScreen">
+          <span class="btn-content">العودة</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- النوافذ المنبثقة -->
+  <!-- نافذة تأكيد الخروج -->
+  <div id="confirmExitModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmExitTitle">
+    <div class="modal-content scale-in">
+      <h3 id="confirmExitTitle">🚪 إنهاء المسابقة</h3>
+      <p>سيتم حفظ نقاطك الحالية. هل ترغب في المتابعة؟</p>
+      <div class="modal-buttons">
+        <button class="btn-main" data-action="endGame">نعم</button>
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="confirmExitModal">لا</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة الإبلاغ عن مشكلة -->
+  <div id="advancedReportModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="advancedReportTitle">
+    <div class="modal-content scale-in">
+      <h3 id="advancedReportTitle">⚠️ الإبلاغ عن مشكلة</h3>
+      <form id="reportProblemForm" class="report-form">
+        <div class="form-group">
+          <label for="problemType" class="form-label">نوع المشكلة:</label>
+          <select id="problemType" name="problemType" class="form-select" required>
+            <option value="">اختر نوع المشكلة...</option>
+            <option value="technical">مشكلة تقنية (تجمد، بطء)</option>
+            <option value="question_error">خطأ في السؤال أو الإجابة</option>
+            <option value="account_issue">مشكلة في الحساب أو النقاط</option>
+            <option value="ui_ux">واجهة/تجربة المستخدم</option>
+            <option value="performance">الأداء/السرعة</option>
+            <option value="suggestion">اقتراح لتحسين اللعبة</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="problemLocation" class="form-label">أين ظهرت المشكلة؟ (اختياري)</label>
+          <select id="problemLocation" name="problemLocation" class="form-select">
+            <option value="unspecified">لم أحدد...</option>
+            <option value="start">شاشة البداية</option>
+            <option value="avatar">اختيار الصورة الرمزية</option>
+            <option value="name">إدخال الاسم</option>
+            <option value="instructions">التعليمات</option>
+            <option value="game">أثناء الأسئلة</option>
+            <option value="leaderboard">لوحة الصدارة</option>
+            <option value="end">شاشة النتيجة</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="problemDescription" class="form-label">وصف المشكلة:</label>
+          <textarea id="problemDescription" name="problemDescription" 
+                    placeholder="يرجى تقديم تفاصيل دقيقة..." 
+                    class="form-textarea" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="problemScreenshot" class="form-label">إرفاق صورة/لقطة شاشة (اختياري):</label>
+          <div class="file-upload">
+            <input type="file" id="problemScreenshot" accept="image/*" class="file-input">
+            <label for="problemScreenshot" class="file-label">
+              <span class="file-icon">📎</span>
+              <span class="file-text">اختر ملف</span>
+            </label>
+          </div>
+          <div id="reportImagePreview" class="image-preview">
+            <img alt="معاينة الصورة" class="preview-image"/>
+          </div>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="includeAutoDiagnostics" checked>
+            <span class="checkmark"></span>
+            إرفاق معلومات التشخيص التلقائي
+          </label>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="submit" class="btn-main">
+            <span class="btn-content">إرسال البلاغ</span>
+          </button>
+          <button type="button" class="btn-secondary" data-action="closeModal" data-modal-id="advancedReportModal">
+            <span class="btn-content">إلغاء</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- نافذة تعديل الصورة الرمزية -->
+  <div id="avatarEditorModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="avatarEditorTitle">
+    <div class="modal-content scale-in">
+      <h3 id="avatarEditorTitle">✂️ تعديل الصورة الرمزية</h3>
+      <div id="image-editor-container" class="editor-container">
+        <img id="image-to-crop" src="" alt="صورة للتقليم/القص" class="crop-image">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-main" data-action="saveCroppedAvatar">
+          <span class="btn-content">حفظ الصورة</span>
+        </button>
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="avatarEditorModal">
+          <span class="btn-content">إلغاء</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نافذة تفاصيل اللاعب -->
+  <div id="playerDetailsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="playerDetailsTitle">
+    <div class="modal-content scale-in">
+      <header class="player-details-header">
+        <div class="player-avatar-container">
+          <img id="detailsAvatar" src="" alt="صورة اللاعب الرمزية" class="player-details-avatar">
+          <div class="avatar-glow"></div>
+        </div>
+        <div class="player-info">
+          <h3 id="playerDetailsTitle">تفاصيل اللاعب</h3>
+          <span id="detailsName" class="player-details-name"></span>
+          <span id="detailsPlayerId" class="player-details-id"></span>
+        </div>
+      </header>
+      <div id="playerDetailsContent" class="player-details-body">
+        <!-- سيتم تعبئته ديناميكياً -->
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="playerDetailsModal">
+          <span class="btn-content">إغلاق</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- نظام المساعدة العائم -->
+  <div id="helpBackdrop" class="help-backdrop" hidden></div>
+  <button id="helpFab" class="help-fab pulse-animation" aria-label="إرشادات اللعب" aria-expanded="false">
+    <span class="help-icon">❔</span>
+    <div class="fab-ripple"></div>
+  </button>
+  
+  <aside id="helpDrawer" class="help-drawer" aria-hidden="true" aria-label="إرشادات اللعب" tabindex="-1">
+    <header class="help-header">
+      <h3>إرشادات اللعب</h3>
+      <button class="help-close" data-help="close" aria-label="إغلاق">×</button>
+    </header>
+    <div id="helpBody" class="help-body" role="region" aria-live="polite">
+      <!-- سيتم تعبئته ديناميكياً -->
+    </div>
+    <footer class="help-footer">
+      <button class="help-btn" data-help="prev" aria-label="السابق">
+        <span class="btn-arrow">←</span> السابق
+      </button>
+      <span id="helpProgress" class="help-progress">1/9</span>
+      <button class="help-btn" data-help="next" aria-label="التالي">
+        التالي <span class="btn-arrow">→</span>
+      </button>
+    </footer>
+  </aside>
+
+  <!-- المكتبات الخارجية -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+
+  <!-- الملفات الداخلية -->
+  <script src="script.js?v=20" defer></script>
+</body>
+</html>
