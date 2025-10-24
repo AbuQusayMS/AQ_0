@@ -228,17 +228,17 @@ class QuizGame {
 
     async preloadAudio() {
         const audioFiles = {
-            correct: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/correct.mp3', // ضع رابط الصوت للإجابة الصحيحة
-            wrong: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/wrong.mp3',   // ضع رابط الصوت للإجابة الخاطئة
-            levelup: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/levelup.mp3', // ضع رابط الصوت لانتهاء المستوى
-            win: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/win.mp3',     // ضع رابط الصوت للفوز
-            loss: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/loss.mp3',    // ضع رابط الصوت للخسارة
-            start: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/start.mp3',   // ضع رابط الصوت للبدء
-            click: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/ui-click.mp3',   // ضع رابط الصوت للنقر
-            notify: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/notify.mp3',  // ضع رابط الصوت للإشعار
-            coin: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/coin.mp3',    // ضع رابط الصوت للعملة
-            fadeout: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/fadeout.mp3', // ضع رابط الصوت للتلاشي
-            whoosh: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/whoosh.mp3'   // ضع رابط الصوت للصوت السريع
+            correct: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/correct.mp3', // ضع رابط الصوت للإجابة الصحيحة
+            wrong: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/wrong.mp3',   // ضع رابط الصوت للإجابة الخاطئة
+            levelup: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/levelup.mp3', // ضع رابط الصوت لانتهاء المستوى
+            win: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/win.mp3',     // ضع رابط الصوت للفوز
+            loss: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/loss.mp3',    // ضع رابط الصوت للخسارة
+            start: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/start.mp3',   // ضع رابط الصوت للبدء
+            click: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/ui-click.mp3',   // ضع رابط الصوت للنقر
+            notify: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/notify.mp3',  // ضع رابط الصوت للإشعار
+            coin: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/coin.mp3',    // ضع رابط الصوت للعملة
+            fadeout: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/fadeout.mp3', // ضع رابط الصوت للتلاشي
+            whoosh: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/whoosh.mp3'   // ضع رابط الصوت للصوت السريع
         };
 
         const loadPromises = [];
