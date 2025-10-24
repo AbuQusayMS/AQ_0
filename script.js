@@ -6,9 +6,9 @@ class QuizGame {
         this.config = {
             SUPABASE_URL: 'https://sngetxkrlizksgjiovbs.supabase.co', // ضع رابط خادم Supabase الرئيسي هنا
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuZ2V0eGtybGl6a3NnamlvdmJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyOTYyNzEsImV4cCI6MjA3Njg3MjI3MX0.XIFw-huu8_uLtY16ILpXCU6us4jyqEpfagVRqj1l-EI', // ضع مفتاح الخادم الرئيسي هنا
-            EDGE_SAVE_URL: '###', // ضع رابط دالة حفظ النتائج هنا
-            EDGE_LOG_URL: '###', // ضع رابط دالة السجلات هنا
-            EDGE_REPORT_URL: '###', // ضع رابط دالة البلاغات هنا
+            EDGE_SAVE_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/saveResult', // ضع رابط دالة حفظ النتائج هنا
+            EDGE_LOG_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/clientLog', // ضع رابط دالة السجلات هنا
+            EDGE_REPORT_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/report', // ضع رابط دالة البلاغات هنا
             EDGE_LEADERBOARD_URL: '###', // ضع رابط دالة لوحة الصدارة هنا
             APP_KEY: 'MS_AbuQusay',
             QUESTIONS_URL: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/questions.json', // ضع رابط ملف الأسئلة هنا
@@ -228,17 +228,17 @@ class QuizGame {
 
     async preloadAudio() {
         const audioFiles = {
-            correct: '###', // ضع رابط الصوت للإجابة الصحيحة
-            wrong: '###',   // ضع رابط الصوت للإجابة الخاطئة
-            levelup: '###', // ضع رابط الصوت لانتهاء المستوى
-            win: '###',     // ضع رابط الصوت للفوز
-            loss: '###',    // ضع رابط الصوت للخسارة
-            start: '###',   // ضع رابط الصوت للبدء
-            click: '###',   // ضع رابط الصوت للنقر
-            notify: '###',  // ضع رابط الصوت للإشعار
-            coin: '###',    // ضع رابط الصوت للعملة
-            fadeout: '###', // ضع رابط الصوت للتلاشي
-            whoosh: '###'   // ضع رابط الصوت للصوت السريع
+            correct: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/correct.mp3', // ضع رابط الصوت للإجابة الصحيحة
+            wrong: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/wrong.mp3',   // ضع رابط الصوت للإجابة الخاطئة
+            levelup: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/levelup.mp3', // ضع رابط الصوت لانتهاء المستوى
+            win: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/win.mp3',     // ضع رابط الصوت للفوز
+            loss: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/loss.mp3',    // ضع رابط الصوت للخسارة
+            start: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/start.mp3',   // ضع رابط الصوت للبدء
+            click: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/ui-click.mp3',   // ضع رابط الصوت للنقر
+            notify: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/notify.mp3',  // ضع رابط الصوت للإشعار
+            coin: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/coin.mp3',    // ضع رابط الصوت للعملة
+            fadeout: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/fadeout.mp3', // ضع رابط الصوت للتلاشي
+            whoosh: 'https://github.com/AbuQusayMS/AQ_0/blob/main/audio/whoosh.mp3'   // ضع رابط الصوت للصوت السريع
         };
 
         const loadPromises = [];
@@ -1712,14 +1712,14 @@ Object.assign(QuizGame.prototype, {
         this.getEl('.avatar-upload-btn').addEventListener('click', () => this.getEl('#avatarUploadInput').click());
 
         const avatarUrls = [
-            "###", // ضع رابط الصورة الرمزية 1
-            "###", // ضع رابط الصورة الرمزية 2
-            "###", // ضع رابط الصورة الرمزية 3
-            "###", // ضع رابط الصورة الرمزية 4
-            "###", // ضع رابط الصورة الرمزية 5
-            "###", // ضع رابط الصورة الرمزية 6
-            "###", // ضع رابط الصورة الرمزية 7
-            "###"  // ضع رابط الصورة الرمزية 8
+            "https://em-content.zobj.net/thumbs/120/apple/354/woman_1f469.png", // ضع رابط الصورة الرمزية 1
+            "https://em-content.zobj.net/thumbs/120/apple/354/man_1f468.png", // ضع رابط الصورة الرمزية 2
+            "https://em-content.zobj.net/thumbs/120/apple/354/person-beard_1f9d4.png", // ضع رابط الصورة الرمزية 3
+            "https://em-content.zobj.net/thumbs/120/apple/354/person-beard_1f9d4.png", // ضع رابط الصورة الرمزية 4
+            "https://em-content.zobj.net/thumbs/120/apple/354/student_1f9d1-200d-1f393.png", // ضع رابط الصورة الرمزية 5
+            "https://em-content.zobj.net/thumbs/120/apple/354/teacher_1f9d1-200d-1f3eb.png", // ضع رابط الصورة الرمزية 6
+            "https://em-content.zobj.net/thumbs/120/apple/354/scientist_1f9d1-200d-1f52c.png", // ضع رابط الصورة الرمزية 7
+            "https://em-content.zobj.net/thumbs/120/apple/354/artist_1f9d1-200d-1f3a8.png"  // ضع رابط الصورة الرمزية 8
         ];
 
         this.preloadImages(avatarUrls);
@@ -2042,8 +2042,8 @@ document.addEventListener('DOMContentLoaded', () => {
     <h4><span class="icon">📩</span><span>الدعم</span></h4>
     <p>للاقتراحات أو الإبلاغ عن مشكلة:</p>
     <ul>
-    <li><a href="###" target="_blank" rel="noopener noreferrer">إكس</a></li> <!-- ضع رابط إكس -->
-    <li><a href="###" target="_blank" rel="noopener noreferrer">إنستغرام</a></li> <!-- ضع رابط إنستغرام -->
+    <li><a href="https://x.com/_MS_AbuQusay?t=Uwuphojz9si0DI-VhzkN6g&s=09" target="_blank" rel="noopener noreferrer">إكس</a></li> <!-- ضع رابط إكس -->
+    <li><a href="https://www.instagram.com/_ms_abuqusay?igsh=OTRmODR1cTNkcXV1" target="_blank" rel="noopener noreferrer">إنستغرام</a></li> <!-- ضع رابط إنستغرام -->
     </ul>
     </div>
     `}
