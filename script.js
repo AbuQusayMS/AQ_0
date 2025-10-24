@@ -11,7 +11,7 @@ class QuizGame {
             EDGE_REPORT_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/report', // ضع رابط دالة البلاغات هنا
             EDGE_LEADERBOARD_URL: '###', // ضع رابط دالة لوحة الصدارة هنا
             APP_KEY: 'MS_AbuQusay',
-            QUESTIONS_URL: 'https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/questions.json', // ضع رابط ملف الأسئلة هنا
+            QUESTIONS_URL: 'questions.json', // ضع رابط ملف الأسئلة هنا
 
             QUESTION_TIME: 80,
             MAX_WRONG_ANSWERS: 3,
