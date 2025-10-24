@@ -1,6 +1,6 @@
 const ICON_SUN = '\u2600\uFE0F';
 const ICON_MOON = '\uD83C\uDF19';
-
+ 
 class QuizGame {
     constructor() {
         this.config = {
