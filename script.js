@@ -14,7 +14,7 @@ class QuizGame {
             QUESTIONS_URL: 'questions.json', // ضع رابط ملف الأسئلة هنا
 
             QUESTION_TIME: 80,
-            MAX_WRONG_ANSWERS: 3,
+            MAX_WRONG_ANSWERS: 47,
             STARTING_SCORE: 100,
 
             LEVELS: [
