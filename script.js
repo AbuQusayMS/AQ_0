@@ -6,10 +6,10 @@ class QuizGame {
         this.config = {
             SUPABASE_URL: 'https://sngetxkrlizksgjiovbs.supabase.co', // ضع رابط خادم Supabase الرئيسي هنا
             SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuZ2V0eGtybGl6a3NnamlvdmJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjEyOTYyNzEsImV4cCI6MjA3Njg3MjI3MX0.XIFw-huu8_uLtY16ILpXCU6us4jyqEpfagVRqj1l-EI', // ضع مفتاح الخادم الرئيسي هنا
-            EDGE_SAVE_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/saveResult', // ضع رابط دالة حفظ النتائج هنا
-            EDGE_LOG_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/clientLog', // ضع رابط دالة السجلات هنا
-            EDGE_REPORT_URL: 'https://caixyxzokfvsouuwucwc.supabase.co/functions/v1/report', // ضع رابط دالة البلاغات هنا
-            EDGE_LEADERBOARD_URL: '###', // ضع رابط دالة لوحة الصدارة هنا
+            EDGE_SAVE_URL: 'https://sngetxkrlizksgjiovbs.supabase.co/functions/v1/saveResult', // ضع رابط دالة حفظ النتائج هنا
+            EDGE_LOG_URL: 'https://sngetxkrlizksgjiovbs.supabase.co/functions/v1/clientLog', // ضع رابط دالة السجلات هنا
+            EDGE_REPORT_URL: 'https://sngetxkrlizksgjiovbs.supabase.co/functions/v1/report', // ضع رابط دالة البلاغات هنا
+            EDGE_LEADERBOARD_URL: 'https://sngetxkrlizksgjiovbs.supabase.co/functions/v1/leaderboard', // ضع رابط دالة لوحة الصدارة هنا
             APP_KEY: 'MS_AbuQusay',
             QUESTIONS_URL: 'questions.json', // ضع رابط ملف الأسئلة هنا
 
