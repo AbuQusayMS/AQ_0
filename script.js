@@ -9,7 +9,7 @@ class QuizGame {
             EDGE_SAVE_URL: 'https://ckbphyndplaihlfdypyi.supabase.co/functions/v1/saveResult',
             EDGE_LEADERBOARD_URL: 'https://ckbphyndplaihlfdypyi.supabase.co/functions/v1/leaderboard',
             APP_KEY: 'MS_AbuQusay',
-            QUESTIONS_URL: 'https://abuqusayms.github.io/MS_AbuQusay/questions.json',
+            QUESTIONS_URL: './questions.json',
 
             QUESTION_TIME: 80,
             MAX_WRONG_ANSWERS: Infinity, // غير محدود
@@ -446,17 +446,17 @@ class QuizGame {
     async preloadAudio() {
         if (this._audioReady) return;
         const files = {
-            correct: '/MS_AbuQusay/audio/correct.mp3',
-            wrong:   '/MS_AbuQusay/audio/wrong.mp3',
-            levelup: '/MS_AbuQusay/audio/levelup.mp3',
-            win:     '/MS_AbuQusay/audio/win.mp3',
-            loss:    '/MS_AbuQusay/audio/loss.mp3',
-            start:   '/MS_AbuQusay/audio/start.mp3',
-            click:   '/MS_AbuQusay/audio/ui-click.mp3',
-            notify:  '/MS_AbuQusay/audio/notify.mp3',
-            coin:    '/MS_AbuQusay/audio/coin.mp3',
-            fadeout: '/MS_AbuQusay/audio/fadeout.mp3',
-            whoosh:  '/MS_AbuQusay/audio/whoosh.mp3'
+            correct: './audio/correct.mp3',
+            wrong:   './audio/wrong.mp3',
+            levelup: './audio/levelup.mp3',
+            win:     './audio/win.mp3',
+            loss:    './audio/loss.mp3',
+            start:   './audio/start.mp3',
+            click:   './audio/ui-click.mp3',
+            notify:  './audio/notify.mp3',
+            coin:    './audio/coin.mp3',
+            fadeout: './audio/fadeout.mp3',
+            whoosh:  './audio/whoosh.mp3'
         };
 
         for (const [key, src] of Object.entries(files)) {
