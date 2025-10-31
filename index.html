@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="مسابقة معلومات تفاعلية لاختبار ثقافتك في مستويات متعددة.">
+  <title>مسابقة المعلومات</title>
+
+  <link rel="icon" type="image/png" href="https://em-content.zobj.net/thumbs/120/apple/354/brain_1f9e0.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+  <link rel="stylesheet" href="style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    "name": "مسابقة المعلومات",
+    "description": "لعبة مسابقة تفاعلية لاختبار المعلومات في مستويات متعددة.",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web Browser",
+    "author": {
+      "@type": "Person",
+      "name": "MS AbuQusay"
+    }
+  }
+  </script>
+</head>
+<body data-theme="dark">
+  <noscript>هذه اللعبة تتطلب تفعيل JavaScript.</noscript>
+
+  <div id="toast-container" class="toast-container" aria-live="assertive"></div>
+
+  <!--  div#reportErrorFab (Removed as requested) -->
+
+  <div id="loader" class="screen active" role="status" aria-label="جاري التحميل">
+    <div class="spinner" aria-hidden="true"></div>
+    <p id="loaderText" class="game-subtitle" style="margin-top: 1rem;">جاري تحميل اللعبة...</p>
+  </div>
+
+  <div id="startScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header">
+        <h1 class="game-title">🧠 مسابقة المعلومات</h1>
+        <p class="game-subtitle">اختبر قدراتك في مسابقة تفاعلية شيقة</p>
+      </header>
+      <div class="button-group">
+          <button id="startBtn" class="btn-main" data-action="showAvatarScreen">ابدأ اللعب</button>
+          <button data-action="showLeaderboard" class="btn-secondary">لوحة الصدارة</button>
+      </div>
+
+      <div class="theme-palette-picker">
+          <label for="paletteSelect" class="sr-only">اختيار نمط الألوان</label>
+          <select id="paletteSelect">
+              <option value="classic" selected>🎨 الكلاسيكي</option>
+              <option value="aqua">🌊 فيروزي</option>
+              <option value="neon">💎 نيون</option>
+              <option value="earth">🌾 ترابي</option>
+          </select>
+      </div>
+    </div>
+  </div>
+
+  <div id="avatarScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header"><h2>اختر صورتك الرمزية</h2></header>
+      <div class="avatar-grid" role="group" aria-label="خيارات الصور الرمزية"></div>
+      <div class="button-group">
+        <button id="confirmAvatarBtn" class="btn-main" disabled data-action="showNameEntryScreen">التالي</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="nameEntryScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header"><h2>أدخل اسمك</h2></header>
+      <div class="form-group">
+        <label for="nameInput" class="sr-only">اسم اللاعب</label>
+        <input type="text" id="nameInput" placeholder="مثلا: عبد الله" maxlength="25" autocomplete="name" aria-required="true" aria-describedby="nameError">
+        <div id="nameError" class="error-message" aria-live="polite"></div>
+      </div>
+      <div class="button-group">
+        <button id="confirmNameBtn" class="btn-main" disabled data-action="confirmName">تأكيد الإسم</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- div#instructionsScreen (Removed as requested) -->
+
+  <section id="helpGrid" class="help-grid"></section>
+
+  <main id="gameContainer" class="screen">
+    <div class="top-bar">
+      <button class="end-quiz-btn" aria-label="إنهاء المسابقة" data-action="showConfirmExitModal">🚪 إنهاء</button>
+      <div class="level-progress">
+        <div class="level-indicator" data-level="easy" data-tooltip="المستوى السهل">1</div>
+        <div class="level-indicator" data-level="medium" data-tooltip="المستوى المتوسط">2</div>
+        <div class="level-indicator" data-level="hard" data-tooltip="المستوى الصعب">3</div>
+        <div class="level-indicator" data-level="impossible" data-tooltip="المستوى المستحيل">4</div>
+      </div>
+      <button class="theme-toggle-btn" aria-label="تبديل وضع السطوع والظلام" data-action="toggleTheme">☀️</button>
+    </div>
+
+    <header class="game-header">
+      <div class="player-info">
+        <div class="player-main">
+          <img id="playerAvatar" src="" alt="الصورة الرمزية للاعب" loading="lazy" decoding="async">
+          <div class="player-details">
+            <span id="playerName" aria-label="اسم اللاعب"></span>
+            <span id="playerId" class="player-id"></span>
+          </div>
+        </div>
+        <div class="player-stats">
+          <div class="stat-item">النقاط: <strong id="currentScore" aria-live="polite">100</strong></div>
+          <!-- Changed: Removed ' / 3' to reflect unlimited wrong answers -->
+          <div class="stat-item">الأخطاء: <strong id="wrongAnswersCount" aria-live="assertive">0</strong></div>
+          <div class="stat-item">التخطي: <strong id="skipCount">0</strong></div>
+        </div>
+      </div>
+
+      <div class="helpers" aria-label="خيارات المساعدة">
+        <button class="helper-btn" data-type="fiftyFifty" aria-describedby="fiftyFiftyDesc"><span class="sr-only">مساعدة 50:50</span>50:50<span class="helper-cost">(100)</span></button>
+        <button class="helper-btn" data-type="freezeTime" aria-describedby="freezeTimeDesc"><span class="sr-only">مساعدة تجميد الوقت</span>❄️ 10ث<span class="helper-cost">(100)</span></button>
+        <button class="helper-btn" data-type="skipQuestion" aria-describedby="skipQuestionDesc"><span class="sr-only">تخطي السؤال</span>⏭️ تخطي<span id="skipCost" class="helper-cost">(مجانية)</span></button>
+
+        <span id="fiftyFiftyDesc" class="sr-only">يزيل خيارين خاطئين. الاستخدام مرة واحدة لكل جولة. التكلفة 100 نقطة.</span>
+        <span id="freezeTimeDesc" class="sr-only">يوقف المؤقت 10 ثوانٍ. الاستخدام مرة واحدة لكل جولة. التكلفة 100 نقطة.</span>
+        <span id="skipQuestionDesc" class="sr-only">تخطي السؤال الحالي. مجانية تماماً.</span>
+      </div>
+    </header>
+
+    <div class="timer-container" aria-label="مؤقت السؤال">
+      <div class="timer-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"></div>
+      <span id="timer" class="timer-text">30</span>
+    </div>
+
+    <div class="main-content">
+      <section class="question-box" aria-labelledby="questionCounter">
+        <div class="level-badge" id="currentLevelBadge">سهل</div>
+        <h3 id="questionCounter">السؤال 1 من 5</h3>
+        <p id="questionText" aria-live="polite"></p>
+      </section>
+      <section class="options-container" aria-labelledby="questionText">
+        <div class="options-grid" role="group" aria-label="خيارات الإجابة"></div>
+      </section>
+    </div>
+  </main>
+
+  <div id="levelCompleteScreen" class="screen">
+    <div class="content-box">
+      <header class="screen-header"><h2 id="levelCompleteTitle">🎉 أكملت المستوى!</h2></header>
+      <div class="level-stats">
+        <p>النقاط الحالية: <strong id="levelScore"></strong></p>
+        <p>عدد الأخطاء: <strong id="levelErrors"></strong></p>
+        <p>الأسئلة الصحيحة: <strong id="levelCorrect"></strong></p>
+      </div>
+      <div class="button-group">
+        <button class="btn-main" data-action="nextLevel">المستوى التالي</button>
+        <button class="btn-secondary" data-action="endGame">الانسحاب وعرض النتائج</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="endScreen" class="screen screen--align-top">
+    <div class="content-box">
+      <header class="screen-header"><h2>🏆 النتائج النهائية 🏆</h2></header>
+      <div class="final-stats">
+        <p>✍️ الاسم: <strong id="finalName"></strong></p>
+        <p>🆔 المعرّف: <strong id="finalId"></strong></p>
+        <p>🔢 رقم المحاولة: <strong id="finalAttemptNumber"></strong></p>
+        <p>✅ الإجابات الصحيحة: <strong id="finalCorrect"></strong></p>
+        <p>❌ الإجابات الخاطئة: <strong id="finalWrong"></strong></p>
+        <p>⏭️ مرات التخطي: <strong id="finalSkips"></strong></p>
+        <p>⭐ النقاط النهائية: <strong id="finalScore"></strong></p>
+        <p>⏱️ الوقت المستغرق: <strong id="totalTime"></strong></p>
+        <p>📈 المستوى الذي وصلت إليه: <strong id="finalLevel"></strong></p>
+        <p>🎯 نسبة الدقة: <strong id="finalAccuracy"></strong></p>
+        <p>⏳ متوسط وقت الإجابة: <strong id="finalAvgTime"></strong></p>
+        <div class="performance-rating"><span>أداؤك: </span><strong id="performanceText"></strong></div>
+      </div>
+      <section class="share-section">
+        <h3>📢 مشاركة النتائج</h3>
+        <div class="share-buttons">
+          <button class="share-btn x" data-action="shareOnX">X</button>
+          <button class="share-btn instagram" data-action="shareOnInstagram">Instagram</button>
+        </div>
+      </section>
+
+      <p id="retryHint" style="display:none; text-align:center; margin-top:1rem;">
+        ⏳ يمكنك المحاولة مجددًا بعد <b id="retryCountdown">30</b> ثانية.
+      </p>
+      
+      <div class="button-group">
+         <button id="playAgainBtn" class="btn-main" data-action="playAgain">أعد اللعب</button>
+         <button class="btn-secondary" data-action="showLeaderboard">لوحة الصدارة</button>
+        <button class="btn-secondary" data-action="showStartScreen">العودة للرئيسية</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="leaderboardScreen" class="screen screen--align-top">
+    <div class="content-box">
+      <header class="screen-header"><h2>🏆 لوحة الصدارة 🏆</h2></header>
+      
+      <div class="lb-filters">
+      <div id="lbLastUpdated" class="lb-last-updated" style="text-align:center;opacity:.8;font-size:.9rem;margin-top:.25rem"></div>
+        <select id="lbMode" aria-label="نمط ترتيب اللوحة">
+          <option value="all">الكل</option>
+          <option value="best" selected>أفضل نتيجة</option>
+          <option value="attempt">رقم المحاولة</option>
+          <option value="accuracy">أعلى دقة</option>
+          <option value="time">أقل وقت</option>
+         </select>
+        <select id="lbAttempt" disabled aria-label="اختر رقم المحاولة">
+
+        </select>
+      </div>
+      
+      <div id="leaderboardContent" aria-live="polite"></div>
+      <div class="button-group">
+        <button class="btn-secondary" data-action="showStartScreen">العودة</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmExitModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirmExitTitle">
+    <div class="modal-content">
+      <h3 id="confirmExitTitle">إنهاء المسابقة</h3>
+      <p>سيتم حفظ نقاطك الحالية. هل ترغب في المتابعة؟</p>
+      <div class="modal-buttons">
+        <button class="btn-main" data-action="endGame">نعم</button>
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="confirmExitModal">لا</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- div#advancedReportModal (Removed as requested) -->
+
+  <div id="avatarEditorModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="avatarEditorTitle">
+    <div class="modal-content">
+      <h3 id="avatarEditorTitle">تعديل الصورة الرمزية</h3>
+      <div id="image-editor-container">
+        <img id="image-to-crop" src="" alt="صورة للتقليم/القص">
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-main" data-action="saveCroppedAvatar">حفظ الصورة</button>
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="avatarEditorModal">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="playerDetailsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="playerDetailsTitle">
+    <div class="modal-content">
+      <header class="player-details-header">
+        <img id="detailsAvatar" src="" alt="صورة اللاعب الرمزية" class="player-details-avatar">
+        <h3 id="playerDetailsTitle">تفاصيل اللاعب</h3>
+        <span id="detailsName"></span>
+        <span id="detailsPlayerId" class="player-id"></span>
+      </header>
+      <div id="playerDetailsContent" class="player-details-body"></div>
+      <div class="modal-buttons">
+        <button class="btn-secondary" data-action="closeModal" data-modal-id="playerDetailsModal">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Help FAB + Drawer -->
+  <div id="helpBackdrop" class="help-backdrop" hidden></div>
+    <!-- Task 1: Changed ID, class, and icon for the new Robot FAB -->
+    <button id="robotHelpFab" class="robot-fab" aria-label="إرشادات اللعب" aria-expanded="false">
+        <video autoplay loop muted playsinline class="robot-video">
+            <source src="https://raw.githubusercontent.com/AbuQusayMS/AQ_0/main/audio/robot.webm" type="video/webm">
+        </video>
+    </button>
+    <aside id="helpDrawer" class="help-drawer" aria-hidden="true" aria-label="إرشادات اللعب" tabindex="-1">
+    <header class="help-header">
+    <h3>إرشادات اللعب</h3>
+    <button class="help-close" data-help="close" aria-label="إغلاق">×</button>
+    </header>
+    <div id="helpBody" class="help-body" role="region" aria-live="polite"></div>
+    <footer class="help-footer">
+    <button class="help-btn" data-help="prev" aria-label="السابق">⬅️ السابق</button>
+    <span id="helpProgress" class="help-progress">1/4</span>
+    <button class="help-btn" data-help="next" aria-label="التالي">التالي ➡️</button>
+    </footer>
+    </aside>
+
+  <!-- نافذة المساعد الجديدة -->
+  <dialog id="robotAssistDialog" aria-labelledby="robotAssistTitle">
+      <section class="assist-wrap" role="document">
+          <header class="assist-header">
+              <h3 id="robotAssistTitle">المساعد الذكي</h3>
+              <button class="assist-close" aria-label="إغلاق">✕</button>
+          </header>
+
+          <p class="assist-subtitle">نصائح سريعة قبل البدء</p>
+  
+          <div id="assistGrid" class="assist-grid" aria-live="polite" aria-busy="false"></div>
+
+      </section>
+  </dialog>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" defer></script>
+
+  <script src="script.js?v=19" defer></script>
+</body>
+</html>
